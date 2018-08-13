@@ -453,11 +453,20 @@ module.exports = ({
     uploadDirectory: uncurry(uploadDirectory(swarmUrl)),
     uploadDirectoryFromDisk: uncurry(uploadDirectoryFromDisk(swarmUrl)),
     uploadToManifest: uncurry(uploadToManifest(swarmUrl)),
+    createMutableResource: uncurry(createMutableResource(swarmUrl)),
     pick: pick,
     hash: hash,
     fromString: fromString,
     toString: toString
   });
+
+  //payLoad is a JSON
+  // Returns the MRU_MANIFEST_KEY as a string.
+  const createMutableResource = swarmUrl => payLoad =>
+      request(`${swarmUrl}/bzz-resource:/`, {
+          body: payLoad,
+          method: "POST"});
+
 
   return {
     at,
@@ -481,6 +490,7 @@ module.exports = ({
     uploadDirectory,
     uploadDirectoryFromDisk,
     uploadToManifest,
+    createMutableResource,
     pick,
     hash,
     fromString,
