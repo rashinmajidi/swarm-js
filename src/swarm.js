@@ -464,7 +464,7 @@ module.exports = ({
   // Returns the MRU_MANIFEST_KEY as a string.
   const createMutableResource = swarmUrl => payLoad =>
       request(`${swarmUrl}/bzz-resource:/`, {
-          body: payLoad,
+          body: JSON.stringify(payLoad),
           method: "POST"});
 
 
