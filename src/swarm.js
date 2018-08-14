@@ -443,7 +443,7 @@ module.exports = ({
 
     // String -> Uint8Array
     const fromString = string =>
-        bytes.toUint8Array(bytes.fromString(string));
+        bytes.toUint8Array(String.String(string));
 
     // String -> SwarmAPI
     //   Fixes the `swarmUrl`, returning an API where you don't have to pass it.
@@ -481,7 +481,7 @@ module.exports = ({
         });
 
     const retrieveMutableResource = swarmUrl => (MRU_MANIFEST_KEY, n, m) =>
-        request(`${swarmUrl}/bzz-resource://${bytes.fromString(MRU_MANIFEST_KEY)}`, {
+        request(`${swarmUrl}/bzz-resource://${+MRU_MANIFEST_KEY}`, {
             method: "GET"
         });
 
