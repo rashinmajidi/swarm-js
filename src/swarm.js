@@ -481,7 +481,7 @@ module.exports = ({
         });
 
     const retrieveMutableResource = swarmUrl => (MRU_MANIFEST_KEY, n, m) =>
-        request(`${swarmUrl}/bzz-resource://`+`<MRU_MANIFEST_KEY>`, {
+        request(`${swarmUrl}/bzz-resource:/${MRU_MANIFEST_KEY}`, {
             method: "GET"
         });
 
