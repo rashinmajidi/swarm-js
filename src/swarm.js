@@ -490,10 +490,10 @@ module.exports = ({
         });
 
     const updateMutableResource = swarmUrl => (payLoad, MRU_MANIFEST_KEY) => {
-        let metaStr=request(`${swarmUrl}/bzz-resource:/${MRU_MANIFEST_KEY}/meta`, {
+        let response=request(`${swarmUrl}/bzz-resource:/${MRU_MANIFEST_KEY}/meta`, {
             method: "GET"
         });
-        const meta= JSON.parse(metaStr);
+        const meta = response.then(metaStr=> JSON.parse(metaStr));
         return signature(payLoad.period, payLoad.version, meta.rootAddr, meta.metaHash, payLoad.multihash, payLoad.data);
     };
 
