@@ -494,7 +494,7 @@ module.exports = ({
             method: "GET"
         });
         const meta= JSON.parse(metaStr);
-        signature(meta.period, meta.version, meta.rootAddr, meta.metaHash, meta.multihash, meta.data);
+        return signature(payLoad.period, payLoad.version, meta.rootAddr, meta.metaHash, payLoad.multihash, payLoad.data);
     };
 
     const signature= (period, version, rootAddr, metaHash, multihash, data)=>{
