@@ -14,7 +14,8 @@ module.exports = ({
                       downloadUrl,
                       bytes,
                       hash,
-                      pick
+                      pick,
+                      web3_utils
                   }) => {
 
     // ∀ a . String -> JSON -> Map String a -o Map String a
@@ -466,6 +467,7 @@ module.exports = ({
         uploadToManifest: uncurry(uploadToManifest(swarmUrl)),
         createMutableResource: uncurry(createMutableResource(swarmUrl)),
         retrieveMutableResource: uncurry(retrieveMutableResource(swarmUrl)),
+        updateMutableResource: uncurry(retrieveMutableResource(swarmUrl)),
         pick: pick,
         hash: hash,
         fromString: fromString,
@@ -483,14 +485,21 @@ module.exports = ({
     };
 
     const retrieveMutableResource = swarmUrl => (MRU_MANIFEST_KEY, n, m) =>
-        request(`${swarmUrl}/bzz-resource://${MRU_MANIFEST_KEY}/meta`, {
+        request(`${swarmUrl}/bzz-resource://${MRU_MANIFEST_KEY}`, {
             method: "GET"
         });
 
     const updateMutableResource = swarmUrl => (payLoad, MRU_MANIFEST_KEY) => {
-        const meta=request(`${swarmUrl}/bzz-resource://${MRU_MANIFEST_KEY}/meta`, {
+        let metaStr=request(`${swarmUrl}/bzz-resource://${MRU_MANIFEST_KEY}/meta`, {
             method: "GET"
         });
+        const meta= JSON.parse(metaStr);
+        signature(meta.period, meta.version, meta.rootAddr, meta.metaHash, meta.multihash, meta.data);
+    };
+
+    const signature= (period, version, rootAddr, metaHash, multihash, data)=>{
+        web3_utils.soliditySha3({t: 'uint64', v: period}, {t: 'uint64', v: version}, {t: 'bytes32', v: rootAddr},
+        {t: metaHash, v: metaHash}, {t: 'bool', v: multihash}, {t: 'bytes', v: data+""});
     };
 
     return {
@@ -517,6 +526,7 @@ module.exports = ({
         uploadToManifest,
         createMutableResource,
         retrieveMutableResource,
+        signature,
         pick,
         hash,
         fromString,
