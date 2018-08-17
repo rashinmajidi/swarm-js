@@ -467,7 +467,7 @@ module.exports = ({
         uploadToManifest: uncurry(uploadToManifest(swarmUrl)),
         createMutableResource: uncurry(createMutableResource(swarmUrl)),
         retrieveMutableResource: uncurry(retrieveMutableResource(swarmUrl)),
-        updateMutableResource: uncurry(updateMutableResource(swarmUrl)),
+        updateMutableResource: updateMutableResource(swarmUrl),
         pick: pick,
         hash: hash,
         fromString: fromString,
@@ -485,12 +485,12 @@ module.exports = ({
     };
 
     const retrieveMutableResource = swarmUrl => (MRU_MANIFEST_KEY, n, m) =>
-        request(`${swarmUrl}/bzz-resource://${MRU_MANIFEST_KEY}`, {
+        request(`${swarmUrl}/bzz-resource:/${MRU_MANIFEST_KEY}`, {
             method: "GET"
         });
 
     const updateMutableResource = swarmUrl => (payLoad, MRU_MANIFEST_KEY) => {
-        let metaStr=request(`${swarmUrl}/bzz-resource://${MRU_MANIFEST_KEY}/meta`, {
+        let metaStr=request(`${swarmUrl}/bzz-resource:/${MRU_MANIFEST_KEY}/meta`, {
             method: "GET"
         });
         const meta= JSON.parse(metaStr);
