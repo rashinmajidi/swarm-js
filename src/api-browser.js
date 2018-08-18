@@ -13,6 +13,7 @@ const bytes = require("eth-lib/lib/bytes");
 const hash = require("./swarm-hash.js");
 const pick = require("./pick.js");
 const swarm = require("./swarm");
+const web3_utils= require("web3-utils");
 
 module.exports = swarm({
   fsp,
@@ -26,5 +27,6 @@ module.exports = swarm({
   downloadUrl,
   bytes,
   hash,
-  pick
+  pick,
+  web3_utils
 });
