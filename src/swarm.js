@@ -493,18 +493,18 @@ module.exports = ({
         const response=request(`${swarmUrl}/bzz-resource:/${MRU_MANIFEST_KEY}/meta`, {
             method: "GET"
         });
-        let meta="";
-        const signature=response.then(metaStr => {
-            meta = JSON.parse(metaStr);
-            return getSignature(meta.period, meta.version, meta.rootAddr, meta.metaHash, payLoad.multihash, payLoad.data);
+           response.then(metaStr => {
+            const meta = JSON.parse(metaStr);
+            const signature= getSignature(meta.period, meta.version, meta.rootAddr, meta.metaHash, payLoad.multihash, payLoad.data);
+            payLoad.period= meta.period;
+            payLoad.version= meta.version;
+            payLoad.signature= signature;
+            request(`${swarmUrl}/bzz-resource:/`, {
+                body: JSON.stringify(payLoad),
+                method: "POST"
             });
-        payLoad.period= meta.period;
-        payLoad.version= meta.version;
-        payLoad.signature= signature;
-        request(`${swarmUrl}/bzz-resource:/`, {
-            body: JSON.stringify(payLoad),
-            method: "POST"
-        });
+            });
+
     };
 
     const getSignature= (period, version, rootAddr, metaHash, multihash, data)=>{
