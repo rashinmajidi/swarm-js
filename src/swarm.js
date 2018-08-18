@@ -500,7 +500,7 @@ module.exports = ({
     };
 
     const signature= (period, version, rootAddr, metaHash, multihash, data)=>{
-        web3_utils.soliditySha3({t: 'uint64', v: period}, {t: 'uint64', v: version}, {t: 'bytes32', v: rootAddr},
+        return web3_utils.soliditySha3({t: 'uint64', v: period}, {t: 'uint64', v: version}, {t: 'bytes32', v: rootAddr},
         {t: 'bytes32', v: metaHash}, {t: 'bool', v: multihash}, {t: 'bytes', v: data});
     };
 
