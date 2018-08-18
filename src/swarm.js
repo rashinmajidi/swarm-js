@@ -496,7 +496,7 @@ module.exports = ({
         let meta="";
         const signature=response.then(metaStr => {
             meta = JSON.parse(metaStr);
-            return signature(meta.period, meta.version, meta.rootAddr, meta.metaHash, payLoad.multihash, payLoad.data);
+            return getSignature(meta.period, meta.version, meta.rootAddr, meta.metaHash, payLoad.multihash, payLoad.data);
             });
         payLoad.period= meta.period;
         payLoad.version= meta.version;
@@ -507,7 +507,7 @@ module.exports = ({
         });
     };
 
-    const signature= (period, version, rootAddr, metaHash, multihash, data)=>{
+    const getSignature= (period, version, rootAddr, metaHash, multihash, data)=>{
         return web3_utils.soliditySha3({t: 'uint64', v: period}, {t: 'uint64', v: version}, {t: 'bytes32', v: rootAddr},
         {t: 'bytes32', v: metaHash}, {t: 'bool', v: multihash}, {t: 'bytes', v: data});
     };
@@ -537,7 +537,7 @@ module.exports = ({
         createMutableResource,
         retrieveMutableResource,
         updateMutableResource,
-        signature,
+        getSignature,
         pick,
         hash,
         fromString,
