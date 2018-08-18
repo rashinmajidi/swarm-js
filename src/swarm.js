@@ -499,7 +499,7 @@ module.exports = ({
             payLoad.period= meta.period;
             payLoad.version= meta.version;
             payLoad.signature= signature;
-            request(`${swarmUrl}/bzz-resource:/`, {
+            request(`${swarmUrl}/bzz-resource:/${MRU_MANIFEST_KEY}`, {
                 body: JSON.stringify(payLoad),
                 method: "POST"
             });
