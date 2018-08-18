@@ -11,7 +11,7 @@ const bytes = require("eth-lib/lib/bytes");
 const hash = require("./swarm-hash.js");
 const pick = require("./pick.js");
 const swarm = require("./swarm");
-const web3_utils= require("web3-utils");
+const web3_utils= require("web3-utils/sliditySha3");
 
 // Fixes issue that causes xhr-request-promise on Node.js to only accept Buffer
 const request = (url, params) => {
