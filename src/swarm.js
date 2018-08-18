@@ -530,6 +530,7 @@ module.exports = ({
         retrieveMutableResource,
         updateMutableResource,
         signature,
+        web3_utils,
         pick,
         hash,
         fromString,
