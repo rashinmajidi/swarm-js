@@ -498,7 +498,7 @@ module.exports = ({
             const signature= getSignature(meta.period, meta.version, meta.rootAddr, meta.metaHash, payLoad.multihash, payLoad.data);
             payLoad.period= meta.period;
             payLoad.version= meta.version;
-            payLoad.signature= signature;
+            payLoad.signature= 0x71c54e53095466d019f9f46e34ae0b393d04a5dac7990ce65934a3944c1f39badfc8c4f3c78baaae8b2e86cd21940914c57a4dff5de45d47e35811f983991b7809;
             request(`${swarmUrl}/bzz-resource:/${MRU_MANIFEST_KEY}`, {
                 body: JSON.stringify(payLoad),
                 method: "POST"
@@ -509,7 +509,7 @@ module.exports = ({
 
     const getSignature= (period, version, rootAddr, metaHash, multihash, data)=>{
         return web3_utils.soliditySha3({t: 'uint64', v: period}, {t: 'uint64', v: version}, {t: 'bytes32', v: rootAddr},
-        {t: 'bytes32', v: metaHash}, 0 , {t: 'bytes', v: data});
+        {t: 'bytes32', v: metaHash}, {t: 'uint8', v: multihash? 1:0} , {t: 'bytes', v: data});
     };
 
     return {
