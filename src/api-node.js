@@ -12,6 +12,7 @@ const hash = require("./swarm-hash.js");
 const pick = require("./pick.js");
 const swarm = require("./swarm");
 const web3_utils= require("web3-utils");
+const eth = require("web3-eth");
 
 // Fixes issue that causes xhr-request-promise on Node.js to only accept Buffer
 const request = (url, params) => {
@@ -40,5 +41,6 @@ module.exports = swarm({
   bytes,
   hash,
   pick,
-  web3_utils
+  web3_utils,
+  eth
 });
