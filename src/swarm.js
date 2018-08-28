@@ -496,16 +496,16 @@ module.exports = ({
         });
            response.then(metaStr => {
                const meta = JSON.parse(metaStr);
-               if(payLoad.period==='undefined')
+               if(typeof payLoad.period==='undefined')
                     payLoad.period = meta.period;
-               if(payLoad.version==='undefined')
+               if(typeof payLoad.version==='undefined')
                      payLoad.version = meta.version;
-               if(payLoad.metaHash==='undefined')
+               if(typeof payLoad.metaHash==='undefined')
                      payLoad.metaHash= meta.metaHash;
-               if(payLoad.rootAddr==='undefined')
+               if(typeof payLoad.rootAddr==='undefined')
                     payLoad.rootAddr= meta.rootAddr;
-               if(payLoad.multiHash==='undefined')
-                   payLoad.rootAddr= meta.multiHash;
+               if(typeof payLoad.multiHash==='undefined')
+                   payLoad.multiHash= meta.multiHash;
                const dataToSign = getSha3(payLoad.period, payLoad.version, payLoad.rootAddr, payLoad.metaHash, payLoad.multiHash, payLoad.data);
                web3.eth.sign(dataToSign,meta.ownerAddr).then(function (signature) {
                    signature = signature.slice(signature.length-2)=== "1b" ?  signature.slice(0, signature.length-2)+"00": signature.slice(0, signature.length-2)+"01";
