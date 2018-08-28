@@ -16,8 +16,7 @@ module.exports = ({
                       hash,
                       pick,
                       web3_utils,
-                      web3,
-                      account
+                      web3
                   }) => {
 
     // ∀ a . String -> JSON -> Map String a -o Map String a
@@ -497,23 +496,18 @@ module.exports = ({
         });
            response.then(metaStr => {
                const meta = JSON.parse(metaStr);
-               const dataToSign = getSha3(meta.period, meta.version, meta.rootAddr, meta.metaHash, payLoad.multihash, payLoad.data);
-               payLoad.period = meta.period;
-               payLoad.version = meta.version;
-               payLoad.metaHash= meta.metaHash;
-               payLoad.rootAddr= meta.rootAddr;
+               if(payLoad.period==='undefined')
+                    payLoad.period = meta.period;
+               if(payLoad.version==='undefined')
+                     payLoad.version = meta.version;
+               if(payLoad.metaHash==='undefined')
+                     payLoad.metaHash= meta.metaHash;
+               if(payLoad.rootAddr==='undefined')
+                    payLoad.rootAddr= meta.rootAddr;
+               if(payLoad.multiHash==='undefined')
+                   payLoad.rootAddr= meta.multiHash;
+               const dataToSign = getSha3(payLoad.period, payLoad.version, payLoad.rootAddr, payLoad.metaHash, payLoad.multiHash, payLoad.data);
                web3.eth.sign(dataToSign,meta.ownerAddr).then(function (signature) {
-                   console.log("hash: "+dataToSign);
-                   console.log("signature: "+signature);
-                   const recoveredAccount = account.recover(dataToSign,signature);
-                   console.log("origAccount: "+meta.ownerAddr);
-                   console.log("recoveredAccount: "+recoveredAccount);
-                   // const sig2 = account.sign(dataToSign, "0xd8beb97becd05a8a79a9483f665fdddf3bd11cc39bd0b11f93ee8cc8b8a62738");
-                   // console.log("accountFromPrivateKey: "+eth_accounts.privateKeyToAccount("0xd8beb97becd05a8a79a9483f665fdddf3bd11cc39bd0b11f93ee8cc8b8a62738").address);
-                   // console.log("signature2: "+sig2);
-                   // const recoveredAccount2 = account.recover(dataToSign,sig2);
-                   // console.log("recoveredAccount2: "+recoveredAccount2);
-                   // signature=sig2;
                    signature = signature.slice(signature.length-2)=== "1b" ?  signature.slice(0, signature.length-2)+"00": signature.slice(0, signature.length-2)+"01";
                    payLoad.signature= signature;
                    request(swarmUrl + "/bzz-resource:/", {
@@ -522,7 +516,6 @@ module.exports = ({
                    });
                });
             });
-
     };
 
 
@@ -546,21 +539,6 @@ module.exports = ({
 
     const getSha3 = function getSha3(period, version, rootAddr, metaHash, multihash, data) {
         return web3_utils.soliditySha3({t: 'bytes', v: '0x4900'}, {t: 'bytes', v: uint16ToLittleEndianHex((data.length - 2) / 2)}, {t: 'bytes', v: uint32ToLittleEndianHex(period)}, {t: 'bytes', v: uint32ToLittleEndianHex(version)}, {t: 'bytes32', v: rootAddr}, {t: 'bytes32', v: metaHash}, {t: 'uint8', v: multihash ? 1 : 0}, {t: 'bytes', v: data});
-
-        /*
-        serialized Hex for the following test payload should be:
-        testPayloadHex="0x490034004f000000da070000fb0ed7efa696bdb0b54cd75554cc3117ffc891454317df7dd6fefad978e2f2fbf74a10ce8f26ffc8bfaa07c3031a34b2c61f517955e7deb1592daccf96c69cf000456c20717565206c6565206d7563686f207920616e6461206d7563686f2c207665206d7563686f20792073616265206d7563686f"
-
-        testPayload = {
-            data:"0x456c20717565206c6565206d7563686f207920616e6461206d7563686f2c207665206d7563686f20792073616265206d7563686f",
-            dataStr:"El que lee mucho y anda mucho, ve mucho y sabe mucho",
-            metaHash:"0xf74a10ce8f26ffc8bfaa07c3031a34b2c61f517955e7deb1592daccf96c69cf0",
-            multiHash:false,
-            period:79,
-            rootAddr:"0xfb0ed7efa696bdb0b54cd75554cc3117ffc891454317df7dd6fefad978e2f2fb",
-            version:2010,
-        }
-         */
     };
 
     return {
@@ -588,7 +566,6 @@ module.exports = ({
         createMutableResource,
         retrieveMutableResource,
         updateMutableResource,
-        getSha3,
         pick,
         hash,
         fromString,

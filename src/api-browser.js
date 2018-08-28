@@ -13,20 +13,15 @@ const bytes = require("eth-lib/lib/bytes");
 const hash = require("./swarm-hash.js");
 const pick = require("./pick.js");
 const swarm = require("./swarm");
-const account = require("eth-lib/lib/account");
 const web3_utils= require("web3-utils");
-const Eth = require("web3-eth");
 const Web3 = require("web3");
 
-//const eth = new Eth('http://localhost:8545');
-//const web3 = new Web3(Web3.givenProvider);
 if (typeof Web3 !== 'undefined') {
     web3 = new Web3(Web3.givenProvider);
 } else {
     web3 = new Web3('http://localhost:8545');
     // console.log('Error: web3 is "undefined". Is metamask working? if yes, Try page refresh');
 }
-//const web3 = new Web3('http://localhost:8545');
 
 
 module.exports = swarm({
@@ -44,6 +39,4 @@ module.exports = swarm({
   pick,
   web3_utils,
   web3,
-  eth,
-  account
 });
