@@ -492,9 +492,10 @@ module.exports = ({
 
     const updateMutableResource = swarmUrl => (payLoad, MRU_MANIFEST_KEY) => {
         const response=request(`${swarmUrl}/bzz-resource:/${MRU_MANIFEST_KEY}/meta`, {
-            method: "GET"
+            method: "GET",
+            headers: {"Cache-Control" : "no-cache"}
         });
-           response.then(metaStr => {
+           return response.then(metaStr => {
                const meta = JSON.parse(metaStr);
                if(typeof payLoad.period==='undefined')
                     payLoad.period = meta.period;
@@ -507,10 +508,10 @@ module.exports = ({
                if(typeof payLoad.multiHash==='undefined')
                    payLoad.multiHash= meta.multiHash;
                const dataToSign = getSha3(payLoad.period, payLoad.version, payLoad.rootAddr, payLoad.metaHash, payLoad.multiHash, payLoad.data);
-               web3.eth.sign(dataToSign,meta.ownerAddr).then(function (signature) {
+               return web3.eth.sign(dataToSign,meta.ownerAddr).then(function (signature) {
                    signature = signature.slice(signature.length-2)=== "1b" ?  signature.slice(0, signature.length-2)+"00": signature.slice(0, signature.length-2)+"01";
                    payLoad.signature= signature;
-                   request(swarmUrl + "/bzz-resource:/", {
+                   return request(swarmUrl + "/bzz-resource:/", {
                        body: JSON.stringify(payLoad),
                        method: "POST"
                    });
