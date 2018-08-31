@@ -58,7 +58,7 @@ module.exports = ({
 
     // String -> String -> String
     const rawUrl = swarmUrl => hash =>
-        `${swarmUrl}/bzz:/${hash}`
+        `${swarmUrl}/bzz-raw:/${hash}`
 
     // String -> String -> Promise Uint8Array
     //   Gets the raw contents of a Swarm hash address.
@@ -149,9 +149,7 @@ module.exports = ({
                         const filePath = path.join(dirPath, route);
                         downloads.push(downloadDataToDisk(swarmUrl)(routingTable[route])(filePath));
                     }
-                    ;
                 }
-                ;
                 return Promise.all(downloads).then(() => dirPath);
             });
 
@@ -159,7 +157,7 @@ module.exports = ({
     //   Uploads raw data to Swarm.
     //   Returns a promise with the uploaded hash.
     const uploadData = swarmUrl => data =>
-        request(`${swarmUrl}/bzz:/`, {
+        request(`${swarmUrl}/bzz-raw:/`, {
             body: typeof data === "string" ? fromString(data) : data,
             method: "POST"
         });
@@ -172,7 +170,7 @@ module.exports = ({
     const uploadToManifest = swarmUrl => hash => route => file => {
         const attempt = n => {
             const slashRoute = route[0] === "/" ? route : "/" + route;
-            const url = `${swarmUrl}/bzz:/${hash}${slashRoute}`;
+            const url = `${swarmUrl}/bzz-raw:/${hash}${slashRoute}`;
             const opt = {
                 method: "PUT",
                 headers: {"Content-Type": file.type},
@@ -344,7 +342,7 @@ module.exports = ({
                 clearTimeout(timeout);
                 resolve(swarmProcess);
             }
-        }
+        };
 
         swarmProcess.stdout.on('data', handleProcessOutput);
         swarmProcess.stderr.on('data', handleProcessOutput);
